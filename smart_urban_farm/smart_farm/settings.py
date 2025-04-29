@@ -1,12 +1,13 @@
 from pathlib import Path
+import os
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-SECRET_KEY = 'your-secret-key-here'  # Replace with a secure key
+SECRET_KEY = 'your-secret-key-here'  # এটা অবশ্যই সিক্রেট রাখবে, প্রডাকশনে
 
-DEBUG = True
+DEBUG = False  # Render-এ ডিপ্লয় করার জন্য অবশ্যই False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['your-app-name.onrender.com', 'localhost', '127.0.0.1']  # Render URL এখানে যোগ করবে
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -22,6 +23,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',  # Whitenoise Middleware যোগ করো
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -35,7 +37,7 @@ ROOT_URLCONF = 'smart_farm.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [BASE_DIR / 'templates'],  # যদি তোমার টেমপ্লেট ফোল্ডার থাকে
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -58,7 +60,8 @@ DATABASES = {
 }
 
 LANGUAGE_CODE = 'en-us'
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Asia/Dhaka'  # বাংলাদেশ সময় রাখতে চাইলে
+
 USE_I18N = True
 USE_TZ = True
 
@@ -67,7 +70,12 @@ LOGIN_URL = '/community/signin/'
 LOGIN_REDIRECT_URL = '/dashboard/'
 LOGOUT_REDIRECT_URL = '/community/'
 
+# Static files settings
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [BASE_DIR / "static"]
+STATIC_ROOT = BASE_DIR / "staticfiles"  # ডিপ্লয়ের জন্য
+
+# Whitenoise settings
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
